@@ -21,11 +21,18 @@ var MyComponent = function (template) {
 var AnotherComponent = function (template) {
     return {
         template: template,
+        props: ['info'],
         data() {
             return {
                 title: "Hello, Vue3!",
-                message: "這是第 2 個元件的訊息"
+                message: "這是第 2 個元件的訊息",
+                localCopy: this.info
             };
+        },
+        watch: {
+            info(newVal) {
+                this.localCopy = newVal;
+            }
         },
         methods: {
             changeMessage() {
@@ -56,7 +63,13 @@ Promise.all(
     )
 ).then(components => {
     // 創建 Vue 應用程式
-    const app = createApp({});
+    const app = createApp({
+        data() {
+            return {
+                message: '初始訊息'
+            };
+        }
+    });
 
     // 迴圈註冊所有元件
     components.forEach(({ name, template }) => {

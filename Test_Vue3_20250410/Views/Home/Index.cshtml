@@ -32,10 +32,11 @@
     </div>
 </main>
 
-{{ message }}
+@*{{ message }}*@
+<input v-model="message" placeholder="輸入訊息傳給子元件">
 
 <my-component></my-component>
-<another-component></another-component>
+<another-component :info="message"></another-component>
 
 @section Scripts {
     @*<script>
