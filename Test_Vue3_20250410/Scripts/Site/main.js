@@ -1,5 +1,5 @@
 ﻿
-import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+import { createApp, ref, onMounted, onBeforeUnmount } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 
 var MyComponent = function (template) {
     return {
@@ -42,6 +42,42 @@ var AnotherComponent = function (template) {
     };
 };
 
+const useIdle = (timeout = 60000) => {
+    const isIdle = ref(false)
+    let idleTimer = null
+
+    const resetTimer = () => {
+        clearTimeout(idleTimer)
+        isIdle.value = false
+        idleTimer = setTimeout(() => {
+            isIdle.value = true
+            console.log('🔕 使用者閒置')
+        }, timeout)
+    }
+
+    const onActivity = () => {
+        if (isIdle.value) {
+            console.log('🟢 使用者回來了')
+            // 這裡可以觸發你想要的功能
+        }
+        resetTimer()
+    }
+
+    const events = ['mousemove', 'keydown', 'scroll', 'touchstart']
+
+    onMounted(() => {
+        events.forEach(evt => window.addEventListener(evt, onActivity))
+        resetTimer()
+    })
+
+    onBeforeUnmount(() => {
+        events.forEach(evt => window.removeEventListener(evt, onActivity))
+        clearTimeout(idleTimer)
+    })
+
+    return { isIdle }
+};
+
 // 定義要載入的 HTML 檔案
 const templates = {
     'my-component': {
@@ -64,6 +100,10 @@ Promise.all(
 ).then(components => {
     // 創建 Vue 應用程式
     const app = createApp({
+        setup() {
+            const { isIdle } = useIdle(30000) // 30秒沒動視為閒置
+            return { isIdle }
+        },
         data() {
             return {
                 message: '初始訊息'

@@ -38,6 +38,11 @@
 <my-component></my-component>
 <another-component :info="message"></another-component>
 
+<div>
+    <p v-if="isIdle">🛑 你閒置了</p>
+    <p v-else>🟢 活躍中</p>
+</div>
+
 @section Scripts {
     @*<script>
         const { createApp, ref } = Vue;
