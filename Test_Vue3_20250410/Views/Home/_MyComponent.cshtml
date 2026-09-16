@@ -2,3 +2,47 @@
     <h1>{{ title }}</h1>
     <p>這是第一個 Vue3 元件</p>
 </div>
+
+<v-radio-group v-model="radioValue">
+
+    <div class="radio-layout">
+
+        <div>
+            <v-radio value="option1"
+                     label="選項1" />
+        </div>
+
+        <div class="radio-option">
+
+            <v-radio value="option2"
+                     label="選項2" />
+
+            <v-autocomplete v-model="selectedItems"
+                            :items="items"
+                            item-title="text"
+                            item-value="value"
+                            multiple
+                            density="compact"
+                            hide-details>
+
+                <template #item="{ props, item }">
+
+                    <v-list-item v-bind="props">
+
+                        <template #prepend>
+                            <v-checkbox-btn :model-value="selectedItems.includes(item.value)"
+                                            tabindex="-1"
+                                            readonly />
+                        </template>
+
+                    </v-list-item>
+
+                </template>
+
+            </v-autocomplete>
+
+        </div>
+
+    </div>
+
+</v-radio-group>
